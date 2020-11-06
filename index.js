@@ -1,5 +1,9 @@
-const { callbackify } = require('util');
-const {fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes, nextISSTimesForMyLocation} = require('./iss');
+const {
+  fetchMyIP,
+  fetchCoordsByIP,
+  fetchISSFlyOverTimes,
+  nextISSTimesForMyLocation,
+} = require("./iss");
 
 fetchMyIP((error, ip) => {
   if (error) {
@@ -9,21 +13,24 @@ fetchMyIP((error, ip) => {
   return ip;
 });
 
-fetchCoordsByIP('66.130.18.49',(error, object) => {
+fetchCoordsByIP("66.130.18.49", (error, object) => {
   if (error) {
     console.log("It didn't work!", error);
     return;
   }
-  return object
+  return object;
 });
 
-fetchISSFlyOverTimes({ latitude: 45.5332, longitude: -73.6091 }, (error, passTimes) =>{
-  if (error) {
-    console.log("It didn't work!", error);
-    return;
+fetchISSFlyOverTimes(
+  { latitude: 45.5332, longitude: -73.6091 },
+  (error, passTimes) => {
+    if (error) {
+      console.log("It didn't work!", error);
+      return;
+    }
+    return passTimes;
   }
-  return passTimes;
-});
+);
 
 nextISSTimesForMyLocation((error, passTimes) => {
   if (error) {
@@ -34,12 +41,12 @@ nextISSTimesForMyLocation((error, passTimes) => {
       console.log("It didn't work!", error);
       return;
     }
-    fetchCoordsByIP(ip,(error, object) => {
+    fetchCoordsByIP(ip, (error, object) => {
       if (error) {
         console.log("It didn't work!", error);
         return;
       }
-      fetchISSFlyOverTimes(object, (error, passTimes) =>{
+      fetchISSFlyOverTimes(object, (error) => {
         if (error) {
           console.log("It didn't work!", error);
           return;
@@ -47,7 +54,9 @@ nextISSTimesForMyLocation((error, passTimes) => {
       });
     });
   });
-  for(let passes of passTimes) {
-  console.log(`Next pass at ${passes.risetime} for ${passes.duration} seconds!`);
+  for (let passes of passTimes) {
+    console.log(
+      `Next pass at ${passes.risetime} for ${passes.duration} seconds!`
+    );
   }
 });
